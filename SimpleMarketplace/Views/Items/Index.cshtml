@@ -11,6 +11,30 @@
     }
 </div>
 
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search by title or description..." value="@ViewBag.SearchTerm" />
+                </div>
+                <div class="col-md-4">
+                    <select name="categoryId" class="form-select">
+                        <option value="">All Categories</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.Id" selected="@(ViewBag.SelectedCategoryId == category.Id)">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @if (!Model.Any())
 {
     <div class="alert alert-info" role="alert">
@@ -35,7 +59,21 @@ else
         {
             <div class="col">
                 <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(item.ImageFileName))
+                    {
+                        <img src="~/images/items/@item.ImageFileName" class="card-img-top" alt="@item.Title" style="height: 200px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted">No Image</span>
+                        </div>
+                    }
                     <div class="card-body">
+                        @if (item.Category != null)
+                        {
+                            <span class="badge bg-secondary mb-2">@item.Category.Name</span>
+                        }
                         <h5 class="card-title">@item.Title</h5>
                         <h6 class="card-subtitle mb-2 text-success">$@item.Price.ToString("F2")</h6>
                         <p class="card-text">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
