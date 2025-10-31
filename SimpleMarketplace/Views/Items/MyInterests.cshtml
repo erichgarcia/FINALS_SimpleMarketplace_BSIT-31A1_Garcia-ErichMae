@@ -1,0 +1,53 @@
+@model IEnumerable<SimpleMarketplace.Models.Interest>
+@{
+    ViewData["Title"] = "My Interests";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p class="text-muted">Items you've marked interest in</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">You haven't marked interest in any items yet</h4>
+        <p>Browse available items and mark your interest to let sellers know you're interested!</p>
+        <hr>
+        <a asp-action="Index" class="btn btn-primary">Browse Items</a>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var interest in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@interest.Item.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-success">$@interest.Item.Price.ToString("F2")</h6>
+                        <p class="card-text">@(interest.Item.Description.Length > 150 ? interest.Item.Description.Substring(0, 150) + "..." : interest.Item.Description)</p>
+                        <hr />
+                        <p class="card-text">
+                            <strong>Seller:</strong> @interest.Item.Seller.FullName<br />
+                            <strong>Email:</strong> @interest.Item.Seller.Email<br />
+                            <strong>You marked interest:</strong> @interest.DateMarked.ToLocalTime().ToString("MMM dd, yyyy")
+                        </p>
+                        @if (interest.Item.IsSold)
+                        {
+                            <div class="alert alert-warning mb-2">This item has been sold</div>
+                        }
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <div class="d-flex gap-2">
+                            <a asp-action="Details" asp-route-id="@interest.Item.Id" class="btn btn-primary btn-sm">View Details</a>
+                            <form asp-action="RemoveInterest" asp-route-id="@interest.Item.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">Remove Interest</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

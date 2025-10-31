@@ -1,0 +1,62 @@
+@model IEnumerable<SimpleMarketplace.Models.Item>
+@{
+    ViewData["Title"] = "Browse Items";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a asp-action="Create" class="btn btn-success">Post New Item</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No items available</h4>
+        <p>There are currently no items for sale. Be the first to post an item!</p>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <hr>
+            <a asp-action="Create" class="btn btn-primary">Post an Item</a>
+        }
+        else
+        {
+            <hr>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Register to Post Items</a>
+        }
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <h6 class="card-subtitle mb-2 text-success">$@item.Price.ToString("F2")</h6>
+                        <p class="card-text">@(item.Description.Length > 100 ? item.Description.Substring(0, 100) + "..." : item.Description)</p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                Posted by @item.Seller.FullName<br />
+                                @item.DatePosted.ToLocalTime().ToString("MMM dd, yyyy")
+                            </small>
+                        </p>
+                        @if (item.InterestedBuyers.Any())
+                        {
+                            <p class="card-text">
+                                <small class="text-info">@item.InterestedBuyers.Count interested buyer(s)</small>
+                            </p>
+                        }
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
