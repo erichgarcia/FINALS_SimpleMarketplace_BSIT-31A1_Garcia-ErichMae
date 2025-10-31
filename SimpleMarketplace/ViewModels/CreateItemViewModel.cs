@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace SimpleMarketplace.ViewModels
@@ -18,5 +19,11 @@ namespace SimpleMarketplace.ViewModels
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0")]
         [Display(Name = "Price")]
         public decimal Price { get; set; }
+        
+        [Display(Name = "Category")]
+        public int? CategoryId { get; set; }
+        
+        [Display(Name = "Item Image")]
+        public IFormFile? Image { get; set; }
     }
 }

@@ -26,8 +26,32 @@ namespace SimpleMarketplace.Services
         {
             return await _context.Items
                 .Include(i => i.Seller)
+                .Include(i => i.Category)
                 .Include(i => i.InterestedBuyers)
                 .Where(i => !i.IsSold)
+                .OrderByDescending(i => i.DatePosted)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Item>> SearchItemsAsync(string? searchTerm, int? categoryId)
+        {
+            var query = _context.Items
+                .Include(i => i.Seller)
+                .Include(i => i.Category)
+                .Include(i => i.InterestedBuyers)
+                .Where(i => !i.IsSold);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(i => i.Title.Contains(searchTerm) || i.Description.Contains(searchTerm));
+            }
+
+            if (categoryId.HasValue && categoryId.Value > 0)
+            {
+                query = query.Where(i => i.CategoryId == categoryId.Value);
+            }
+
+            return await query
                 .OrderByDescending(i => i.DatePosted)
                 .ToListAsync();
         }
@@ -36,6 +60,7 @@ namespace SimpleMarketplace.Services
         {
             return await _context.Items
                 .Include(i => i.Seller)
+                .Include(i => i.Category)
                 .Include(i => i.InterestedBuyers)
                     .ThenInclude(interest => interest.Buyer)
                 .FirstOrDefaultAsync(i => i.Id == id);

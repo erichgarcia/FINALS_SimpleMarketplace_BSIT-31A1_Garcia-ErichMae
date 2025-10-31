@@ -6,6 +6,7 @@ namespace SimpleMarketplace.Services
     {
         Task<IEnumerable<Item>> GetAllItemsAsync();
         Task<IEnumerable<Item>> GetAvailableItemsAsync();
+        Task<IEnumerable<Item>> SearchItemsAsync(string? searchTerm, int? categoryId);
         Task<Item?> GetItemByIdAsync(int id);
         Task<IEnumerable<Item>> GetItemsBySellerAsync(string sellerId);
         Task<Item> CreateItemAsync(Item item);

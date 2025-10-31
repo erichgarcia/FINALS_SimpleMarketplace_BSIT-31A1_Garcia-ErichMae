@@ -45,14 +45,18 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Register services
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<IInterestService, InterestService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
-// Ensure database is created (for In-Memory)
+// Ensure database is created and seed data (for In-Memory)
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.EnsureCreated();
+    
+    var categoryService = scope.ServiceProvider.GetRequiredService<ICategoryService>();
+    await categoryService.InitializeCategoriesAsync();
 }
 
 // Configure the HTTP request pipeline.

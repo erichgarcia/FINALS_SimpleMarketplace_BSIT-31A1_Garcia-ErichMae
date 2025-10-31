@@ -11,28 +11,47 @@ namespace SimpleMarketplace.Controllers
     {
         private readonly IItemService _itemService;
         private readonly IInterestService _interestService;
+        private readonly ICategoryService _categoryService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IWebHostEnvironment _environment;
 
         public ItemsController(
             IItemService itemService,
             IInterestService interestService,
-            UserManager<ApplicationUser> userManager)
+            ICategoryService categoryService,
+            UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment environment)
         {
             _itemService = itemService;
             _interestService = interestService;
+            _categoryService = categoryService;
             _userManager = userManager;
+            _environment = environment;
         }
 
         // GET: Items
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTerm, int? categoryId)
         {
-            var items = await _itemService.GetAvailableItemsAsync();
+            IEnumerable<Item> items;
+            
+            if (!string.IsNullOrWhiteSpace(searchTerm) || categoryId.HasValue)
+            {
+                items = await _itemService.SearchItemsAsync(searchTerm, categoryId);
+            }
+            else
+            {
+                items = await _itemService.GetAvailableItemsAsync();
+            }
             
             if (User.Identity?.IsAuthenticated == true)
             {
                 var userId = _userManager.GetUserId(User);
                 ViewBag.UserId = userId;
             }
+            
+            ViewBag.Categories = await _categoryService.GetAllCategoriesAsync();
+            ViewBag.SearchTerm = searchTerm;
+            ViewBag.SelectedCategoryId = categoryId;
             
             return View(items);
         }
@@ -58,8 +77,9 @@ namespace SimpleMarketplace.Controllers
 
         // GET: Items/Create
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Categories = await _categoryService.GetAllCategoriesAsync();
             return View();
         }
 
@@ -72,20 +92,43 @@ namespace SimpleMarketplace.Controllers
             if (ModelState.IsValid)
             {
                 var userId = _userManager.GetUserId(User);
+                string? imageFileName = null;
+                
+                // Handle image upload
+                if (model.Image != null && model.Image.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                    var extension = Path.GetExtension(model.Image.FileName).ToLowerInvariant();
+                    
+                    if (allowedExtensions.Contains(extension))
+                    {
+                        imageFileName = $"{Guid.NewGuid()}{extension}";
+                        var imagePath = Path.Combine(_environment.WebRootPath, "images", "items", imageFileName);
+                        
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            await model.Image.CopyToAsync(stream);
+                        }
+                    }
+                }
                 
                 var item = new Item
                 {
                     Title = model.Title,
                     Description = model.Description,
                     Price = model.Price,
+                    CategoryId = model.CategoryId,
+                    ImageFileName = imageFileName,
                     SellerId = userId!,
                     DatePosted = DateTime.UtcNow
                 };
 
                 await _itemService.CreateItemAsync(item);
+                TempData["Success"] = "Item posted successfully!";
                 return RedirectToAction(nameof(MyItems));
             }
 
+            ViewBag.Categories = await _categoryService.GetAllCategoriesAsync();
             return View(model);
         }
 
