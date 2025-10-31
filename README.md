@@ -4,8 +4,8 @@ A simple online marketplace application built with ASP.NET Core MVC where users 
 
 ## Project Overview
 
-**Student:** GARCIA, ERICH MAE  
-**Section:** BSIT-32A1
+**Student:** GARCIA, ERICH MAE A.
+**Section:** BSIT-31A1
 
 ## Features
 
