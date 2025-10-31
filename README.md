@@ -11,8 +11,11 @@ A simple online marketplace application built with ASP.NET Core MVC where users 
 
 - **User Authentication**: Registration and login with ASP.NET Core Identity
 - **Password Requirements**: At least 2 uppercase letters, 3 numbers, and 3 symbols
-- **Post Items**: Authenticated users can post items for sale with title, description, and price
+- **Post Items**: Authenticated users can post items for sale with title, description, price, category, and image
 - **Browse Items**: View all available items in the marketplace
+- **Search & Filter**: Search items by keyword and filter by category
+- **Image Uploads**: Upload product images when posting items
+- **Categories**: Organize items into Electronics, Furniture, Clothing, Books, Sports, or Other
 - **Mark Interest**: Buyers can mark their interest in items
 - **My Items**: Sellers can view and manage their posted items
 - **My Interests**: Buyers can view all items they've marked interest in
@@ -185,11 +188,14 @@ options.Password.RequiredLength = 8;
 - For production, configure a persistent database (SQL Server, PostgreSQL, etc.)
 - Commits should include maximum of 5 files per commit as per requirements
 
+## Recent Updates
+
+✅ **Image uploads for items** - Users can now upload product images
+✅ **Search and filtering** - Search by keyword and filter by category  
+✅ **Categories** - 6 predefined categories for organizing items
+
 ## Future Enhancements
 
-- Image uploads for items
-- Search and filtering functionality
-- Categories for items
 - Messaging system between buyers and sellers
 - Payment integration
 - Rating and review system
