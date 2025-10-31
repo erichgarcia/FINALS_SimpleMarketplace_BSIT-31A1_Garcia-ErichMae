@@ -1,0 +1,84 @@
+@model IEnumerable<SimpleMarketplace.Models.Item>
+@{
+    ViewData["Title"] = "My Items";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-success">Post New Item</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">You haven't posted any items yet</h4>
+        <p>Start selling by posting your first item!</p>
+        <hr>
+        <a asp-action="Create" class="btn btn-primary">Post an Item</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Posted Date</th>
+                    <th>Status</th>
+                    <th>Interested Buyers</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">@item.Title</a>
+                        </td>
+                        <td>$@item.Price.ToString("F2")</td>
+                        <td>@item.DatePosted.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                        <td>
+                            @if (item.IsSold)
+                            {
+                                <span class="badge bg-secondary">Sold</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Available</span>
+                            }
+                        </td>
+                        <td>
+                            @if (item.InterestedBuyers.Any())
+                            {
+                                <span class="badge bg-info">@item.InterestedBuyers.Count</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">0</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary">View</a>
+                                @if (!item.IsSold)
+                                {
+                                    <form asp-action="MarkAsSold" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-success" onclick="return confirm('Mark as sold?')">Sold</button>
+                                    </form>
+                                }
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Delete this item?')">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
