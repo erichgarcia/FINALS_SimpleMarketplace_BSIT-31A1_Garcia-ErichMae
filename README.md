@@ -4,8 +4,8 @@ A simple online marketplace application built with ASP.NET Core MVC where users 
 
 ## Project Overview
 
-**Student:** GARCIA, ERICH MAE  
-**Section:** BSIT-32A1
+**Student:** GARCIA, ERICH MAE A.  
+**Section:** BSIT-31A1
 
 ## Features
 
@@ -86,31 +86,6 @@ SimpleMarketplace/
 ### Prerequisites
 - .NET 8.0 SDK installed
 - Visual Studio 2022 or VS Code
-
-### Running the Application
-
-1. **Clone or open the project**
-   ```bash
-   cd C:\Users\Erich Garcia\source\repos\SimpleMarketplace
-   ```
-
-2. **Restore dependencies**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Build the project**
-   ```bash
-   dotnet build
-   ```
-
-4. **Run the application**
-   ```bash
-   dotnet run --project SimpleMarketplace
-   ```
-
-5. **Access the application**
-   - Open browser and navigate to: `https://localhost:5001` or `http://localhost:5000`
 
 ## Usage
 
@@ -196,4 +171,3 @@ options.Password.RequiredLength = 8;
 
 ---
 
-**Developed as part of BSIT-32A1 coursework**
