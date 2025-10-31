@@ -81,37 +81,6 @@ SimpleMarketplace/
 - User → Interests (One-to-Many): A user can mark interest in multiple items
 - Item → Interests (One-to-Many): An item can have multiple interested buyers
 
-## Setup and Run
-
-### Prerequisites
-- .NET 8.0 SDK installed
-- Visual Studio 2022 or VS Code
-
-### Running the Application
-
-1. **Clone or open the project**
-   ```bash
-   cd C:\Users\Erich Garcia\source\repos\SimpleMarketplace
-   ```
-
-2. **Restore dependencies**
-   ```bash
-   dotnet restore
-   ```
-
-3. **Build the project**
-   ```bash
-   dotnet build
-   ```
-
-4. **Run the application**
-   ```bash
-   dotnet run --project SimpleMarketplace
-   ```
-
-5. **Access the application**
-   - Open browser and navigate to: `https://localhost:5001` or `http://localhost:5000`
-
 ## Usage
 
 ### Registration
@@ -194,6 +163,3 @@ options.Password.RequiredLength = 8;
 - Payment integration
 - Rating and review system
 
----
-
-**Developed as part of BSIT-32A1 coursework**
