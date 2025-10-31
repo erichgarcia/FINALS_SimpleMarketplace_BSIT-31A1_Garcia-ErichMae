@@ -13,6 +13,7 @@ namespace SimpleMarketplace.Data
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Interest> Interests { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +40,22 @@ namespace SimpleMarketplace.Data
                     .WithMany(u => u.ItemsPosted)
                     .HasForeignKey(e => e.SellerId)
                     .OnDelete(DeleteBehavior.Restrict);
+                
+                // Configure relationship with Category
+                entity.HasOne(e => e.Category)
+                    .WithMany(c => c.Items)
+                    .HasForeignKey(e => e.CategoryId)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+            
+            // Configure Category entity
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
             });
 
             // Configure Interest entity

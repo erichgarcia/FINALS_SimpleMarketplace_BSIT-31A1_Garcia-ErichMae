@@ -22,12 +22,18 @@ namespace SimpleMarketplace.Models
         
         public bool IsSold { get; set; } = false;
         
-        // Foreign key
+        [StringLength(255)]
+        public string? ImageFileName { get; set; }
+        
+        // Foreign keys
         [Required]
         public string SellerId { get; set; } = string.Empty;
         
+        public int? CategoryId { get; set; }
+        
         // Navigation properties
         public virtual ApplicationUser Seller { get; set; } = null!;
+        public virtual Category? Category { get; set; }
         public virtual ICollection<Interest> InterestedBuyers { get; set; } = new List<Interest>();
     }
 }
